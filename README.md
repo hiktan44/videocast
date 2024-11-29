@@ -41,28 +41,6 @@ pip install .
 - Linux için: `sudo apt-get install ffmpeg`
 - Windows için: FFmpeg'i resmi sitesinden indirip sistem yoluna ekleyin
 
-## ⚙️ Yapılandırma
-
-1. Hugging Face erişim anahtarı oluşturun:
-   - [Hugging Face Token Ayarları](https://huggingface.co/settings/tokens) sayfasını ziyaret edin
-   - Yeni bir token oluşturun
-
-2. Diarization kurulumu:
-```bash
-python diarization.py -access_token <HUGGING_FACE_TOKEN>
-```
-
-## 📁 Proje Yapısı
-
-```
-videocast/
-├── kaynak_resimler/    # Giriş resimleri (512x512)
-├── ses/               # Giriş ses dosyaları
-├── diarization/      # Diarization çıktısı
-├── cikti/           # Oluşturulan video klipleri
-└── docs/            # Dökümantasyon
-```
-
 ## 🎮 Kullanım
 
 1. Kaynak resimleri hazırlayın:
@@ -88,16 +66,4 @@ python combine_videos.py
 
 ## 📚 Dokümantasyon
 
-Detaylı dokümantasyon [docs/](docs/) klasöründe mevcuttur:
-- [Kurulum Kılavuzu](docs/kurulum.md)
-- [Yapılandırma Seçenekleri](docs/yapilandirma.md)
-- [Sorun Giderme](docs/sorun_giderme.md)
-
-## 📄 Lisans
-
-Bu proje MIT Lisansı altında lisanslanmıştır - detaylar için [LICENSE](LICENSE) dosyasına bakın.
-
-## 🙏 Teşekkürler
-
-- [pyannote.audio](https://github.com/pyannote/pyannote-audio) - ses diarization için
-- Hugging Face - AI modelleri ve altyapı desteği için
+Detaylı dokümantasyon [docs/](docs/) klasöründe mevcuttur.

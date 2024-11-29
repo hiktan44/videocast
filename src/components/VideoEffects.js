@@ -47,7 +47,7 @@ const VideoEffects = ({ effects, onEffectChange }) => {
   };
 
   return (
-    <div className="video-effects p-4">
+    <div className="p-4 bg-surface-light dark:bg-surface-dark rounded-lg shadow-md">
       <h3 className="text-lg font-bold mb-4">Video Effects</h3>
       
       {availableEffects.map((effect) => (
@@ -61,12 +61,11 @@ const VideoEffects = ({ effects, onEffectChange }) => {
             max={effect.max}
             value={effects[effect.id] || effect.default}
             onChange={(e) => handleEffectChange(effect.id, parseInt(e.target.value))}
-            className="w-full"
+            className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer"
           />
         </div>
       ))}
 
-      {/* Reset Button */}
       <button
         onClick={() => {
           const defaultEffects = {};
@@ -75,7 +74,7 @@ const VideoEffects = ({ effects, onEffectChange }) => {
           });
           onEffectChange(defaultEffects);
         }}
-        className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+        className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors"
       >
         Reset Effects
       </button>

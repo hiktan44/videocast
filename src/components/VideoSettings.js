@@ -12,16 +12,15 @@ const VideoSettings = ({ settings, onSettingsChange }) => {
   const qualities = ['highest', 'high', 'medium', 'low'];
 
   return (
-    <div className="video-settings p-4">
+    <div className="p-4 bg-surface-light dark:bg-surface-dark rounded-lg shadow-md">
       <h3 className="text-lg font-bold mb-4">Video Settings</h3>
       
-      {/* Resolution Setting */}
       <div className="mb-4">
         <label className="block text-sm font-medium mb-2">Resolution</label>
         <select
           value={settings.resolution}
           onChange={(e) => onSettingsChange({ ...settings, resolution: e.target.value })}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600"
         >
           {resolutions.map((res) => (
             <option key={res.value} value={res.value}>
@@ -31,13 +30,12 @@ const VideoSettings = ({ settings, onSettingsChange }) => {
         </select>
       </div>
 
-      {/* Quality Setting */}
       <div className="mb-4">
         <label className="block text-sm font-medium mb-2">Quality</label>
         <select
           value={settings.quality}
           onChange={(e) => onSettingsChange({ ...settings, quality: e.target.value })}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600"
         >
           {qualities.map((quality) => (
             <option key={quality} value={quality}>
@@ -47,7 +45,6 @@ const VideoSettings = ({ settings, onSettingsChange }) => {
         </select>
       </div>
 
-      {/* FPS Setting */}
       <div className="mb-4">
         <label className="block text-sm font-medium mb-2">FPS</label>
         <input
@@ -56,7 +53,7 @@ const VideoSettings = ({ settings, onSettingsChange }) => {
           onChange={(e) => onSettingsChange({ ...settings, fps: parseInt(e.target.value) })}
           min="1"
           max="60"
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600"
         />
       </div>
     </div>

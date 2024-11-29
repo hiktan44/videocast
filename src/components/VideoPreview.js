@@ -47,7 +47,8 @@ const VideoPreview = ({ videoFile, effects }) => {
   }, [effects]);
 
   return (
-    <div className="video-preview relative">
+    <div className="video-preview relative bg-surface-light dark:bg-surface-dark rounded-lg shadow-md p-4">
+      <h3 className="text-lg font-bold mb-4">Video Preview</h3>
       <video
         ref={videoRef}
         className="hidden"
@@ -59,6 +60,11 @@ const VideoPreview = ({ videoFile, effects }) => {
         ref={canvasRef}
         className="w-full h-full rounded-lg shadow-lg"
       />
+      {!videoFile && (
+        <div className="text-center p-8 text-gray-500 dark:text-gray-400">
+          No video selected
+        </div>
+      )}
     </div>
   );
 };

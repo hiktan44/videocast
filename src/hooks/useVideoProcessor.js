@@ -38,6 +38,9 @@ export const useVideoProcessor = () => {
           case 'error':
             setError(error);
             break;
+
+          default:
+            break;
         }
       };
 

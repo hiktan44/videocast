@@ -11,11 +11,26 @@ const VideoPreview = ({ videoFile, effects, onTrimChange }) => {
   const [volume, setVolume] = useState(1);
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(0);
+  const [videoUrl, setVideoUrl] = useState(null);
 
+  // Video URL oluşturma ve temizleme
   useEffect(() => {
     if (videoFile) {
+      const url = URL.createObjectURL(videoFile);
+      setVideoUrl(url);
+      return () => {
+        if (url) {
+          URL.revokeObjectURL(url);
+        }
+      };
+    }
+  }, [videoFile]);
+
+  // Video yüklendiğinde
+  useEffect(() => {
+    if (videoRef.current && videoUrl) {
       const video = videoRef.current;
-      video.src = URL.createObjectURL(videoFile);
+      video.src = videoUrl;
 
       video.onloadedmetadata = () => {
         setDuration(video.duration);
@@ -32,60 +47,73 @@ const VideoPreview = ({ videoFile, effects, onTrimChange }) => {
         }
       };
     }
+  }, [videoUrl, startTime, endTime, isPlaying]);
 
-    return () => {
-      if (videoFile) {
-        URL.revokeObjectURL(videoRef.current.src);
-      }
-    };
-  }, [videoFile, startTime, endTime, isPlaying]);
-
+  // Efektleri uygulama
   useEffect(() => {
-    if (!videoRef.current) return;
+    if (!videoRef.current || !canvasRef.current || !videoUrl) return;
 
     const video = videoRef.current;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
 
     const applyEffects = () => {
-      if (video.paused || video.ended) return;
+      if (video.paused || video.ended || !video.videoWidth) return;
 
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-      const filters = [];
-      if (effects.brightness) filters.push(`brightness(${100 + effects.brightness}%)`);
-      if (effects.contrast) filters.push(`contrast(${100 + effects.contrast}%)`);
-      if (effects.saturation) filters.push(`saturate(${100 + effects.saturation}%)`);
-      if (effects.blur) filters.push(`blur(${effects.blur}px)`);
-      if (effects.sharpness) {
-        const sharpnessContrast = Math.max(100, 100 + effects.sharpness);
-        filters.push(`contrast(${sharpnessContrast}%)`);
+      // Canvas boyutlarını video boyutlarına göre ayarla
+      if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight) {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
       }
 
-      ctx.filter = filters.join(' ');
-      ctx.drawImage(canvas, 0, 0);
+      try {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-      requestAnimationFrame(applyEffects);
+        // Efektleri uygula
+        const filters = [];
+        if (effects.brightness) filters.push(`brightness(${100 + effects.brightness}%)`);
+        if (effects.contrast) filters.push(`contrast(${100 + effects.contrast}%)`);
+        if (effects.saturation) filters.push(`saturate(${100 + effects.saturation}%)`);
+        if (effects.blur) filters.push(`blur(${effects.blur}px)`);
+        if (effects.sharpness) {
+          const sharpnessContrast = Math.max(100, 100 + effects.sharpness);
+          filters.push(`contrast(${sharpnessContrast}%)`);
+        }
+
+        ctx.filter = filters.join(' ');
+        ctx.drawImage(canvas, 0, 0);
+      } catch (error) {
+        console.error('Error applying effects:', error);
+      }
+
+      if (!video.paused && !video.ended) {
+        requestAnimationFrame(applyEffects);
+      }
     };
 
+    let animationFrame;
     if (isPlaying) {
-      video.play();
-      applyEffects();
+      video.play()
+        .then(() => {
+          animationFrame = requestAnimationFrame(applyEffects);
+        })
+        .catch(error => {
+          console.error('Error playing video:', error);
+        });
     } else {
       video.pause();
     }
 
     return () => {
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
       video.pause();
     };
-  }, [effects, isPlaying]);
+  }, [effects, isPlaying, videoUrl]);
 
   const handlePlay = () => {
     if (videoRef.current) {
-      // If at the end of trim range, reset to start
       if (currentTime >= endTime) {
         videoRef.current.currentTime = startTime;
       }
@@ -99,7 +127,6 @@ const VideoPreview = ({ videoFile, effects, onTrimChange }) => {
 
   const handleSeek = (time) => {
     if (videoRef.current) {
-      // Keep seeking within trim range
       const newTime = Math.max(startTime, Math.min(time, endTime));
       videoRef.current.currentTime = newTime;
       setCurrentTime(newTime);
@@ -139,6 +166,7 @@ const VideoPreview = ({ videoFile, effects, onTrimChange }) => {
             ref={videoRef}
             className="hidden"
             muted={volume === 0}
+            playsInline
           />
           <canvas
             ref={canvasRef}

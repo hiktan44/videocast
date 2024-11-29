@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  videocast:
+    build: .
+    image: videocast:latest
+    container_name: videocast
+    restart: unless-stopped
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    volumes:
+      - ./kaynak_resimler:/app/kaynak_resimler
+      - ./ses:/app/ses
+      - ./cikti:/app/cikti
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

@@ -1,0 +1,31 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env/
+.venv/
+
+# IDE
+.idea/
+.vscode/
+
+# Çıktılar
+cikti/
+*.mp4
+
+# Testler ve dokümanlar
+tests/
+docs/
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore

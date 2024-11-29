@@ -1,0 +1,27 @@
+-r requirements.txt
+
+# Test araçları
+pytest>=6.0.0
+pytest-cov>=2.12.0
+pytest-mock>=3.6.1
+
+# Kod kalitesi
+flake8>=3.9.0
+black>=21.5b2
+isort>=5.9.1
+mypy>=0.910
+
+# Dokümantasyon
+Sphinx>=4.0.2
+sphinx-rtd-theme>=0.5.2
+
+# Güvenlik
+bandit>=1.7.0
+safety>=1.10.3
+
+# Debug ve profilleme
+line-profiler>=3.3.1
+memory-profiler>=0.58.0
+
+# Git hooks
+pre-commit>=2.15.0
